@@ -3,35 +3,35 @@ import { Row, Container, Col, FormGroup, Form, Button } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import SweetAlert2 from "react-sweetalert2";
 import { FiEye, FiEyeOff } from "react-icons/fi";
+import axios from 'axios';
 
 function Signup() {
     const navigate = useNavigate();
     const [state, setState] = useState({
-        input: {},
-        showPassword: false, // State to toggle password visibility
-        showRepassword: false, // State to toggle repassword visibility
+        username: '',
+        email: '',
+        password: '',
+        repassword: '',
+        showPassword: false,
+        showRepassword: false,
     });
 
     const [swalProps, setSwalProps] = useState({
         show: false,
-        onConfirmHandle: {}
     });
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setState((prevState) => ({
+        setState(prevState => ({
             ...prevState,
-            input: {
-                ...prevState.input,
-                [name]: value,
-            }
+            [name]: value
         }));
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
-        const { email, password, repassword } = state.input;
+        const { username, email, password, repassword } = state;
 
         if (!validateEmail(email)) {
             setSwalProps({
@@ -40,9 +40,6 @@ function Signup() {
                 text: 'Format email tidak valid',
                 icon: 'warning',
                 showCancelButton: false,
-                onConfirmHandle: () => {
-                    setSwalProps({ ...swalProps, show: false });
-                }
             });
             return;
         }
@@ -54,27 +51,42 @@ function Signup() {
                 text: 'Password tidak sama',
                 icon: 'warning',
                 showCancelButton: false,
-                onConfirmHandle: () => {
-                    setSwalProps({ ...swalProps, show: false });
-                }
             });
             return;
         }
 
-        setSwalProps({
-            show: true,
-            title: 'Sign Up Success',
-            text: 'Thank you, your registration accepted, please login.',
-            icon: 'success',
-            showCancelButton: false,
-            onConfirmHandle: () => {
-                navigate(`/signin`);
+        try {
+            const response = await axios.post('http://localhost:5000/api/signup', {
+                username,
+                email,
+                password,
+            });
+
+            if (response.status === 201) {
+                setSwalProps({
+                    show: true,
+                    title: 'Sign Up Success',
+                    text: 'Thank you, your registration accepted, please login.',
+                    icon: 'success',
+                    showCancelButton: false,
+                    onConfirm: () => {
+                        navigate(`/signin`);
+                    }
+                });
             }
-        });
+        } catch (error) {
+            setSwalProps({
+                show: true,
+                title: 'Error',
+                text: error.response?.data?.message || 'Something went wrong!',
+                icon: 'error',
+                showCancelButton: false,
+            });
+        }
     };
 
     const togglePasswordVisibility = (field) => {
-        setState((prevState) => ({
+        setState(prevState => ({
             ...prevState,
             [field]: !prevState[field],
         }));
@@ -87,7 +99,7 @@ function Signup() {
 
     return (
         <>
-            <SweetAlert2 {...swalProps} onConfirm={swalProps.onConfirmHandle} />
+            <SweetAlert2 {...swalProps} />
             <Container className="mt-3">
                 <Row>
                     <Col xs={4} className="mx-auto">

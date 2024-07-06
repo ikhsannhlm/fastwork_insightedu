@@ -1,19 +1,19 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Button, Col, Container, Form, FormGroup, Row } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import SweetAlert2 from "react-sweetalert2";
+import axios from 'axios';
 
-export function Login() {
-
+export function Signin() {
     const navigate = useNavigate();
     const [state, setState] = useState({
         input: {}
-    })
+    });
 
     const [swalProps, setSwalProps] = useState({
         show: false,
         onConfirmHandle: {}
-    })
+    });
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -23,26 +23,34 @@ export function Login() {
                 ...prevState.input,
                 [name]: value,
             }
-        }))
-    }
+        }));
+    };
 
-    const handleSubmit = (e) => {
-        e.preventDefault()
-        localStorage.setItem('email', state.input.email)
-        navigate('/dashboard')
-    }
-    
-    useEffect(() => {
-        if (localStorage.getItem('email')) {
-            navigate('/dashboard')
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        const { email, password } = state.input;
+
+        try {
+            const response = await axios.post('http://localhost:5000/api/login', { email, password });
+            localStorage.setItem('token', response.data.token);
+            navigate('/dashboard');
+        } catch (error) {
+            setSwalProps({
+                show: true,
+                title: 'Login Failed',
+                text: 'Invalid email or password.',
+                icon: 'error',
+                showCancelButton: false,
+                onConfirmHandle: () => {
+                    setSwalProps({ ...swalProps, show: false });
+                }
+            });
         }
-    }, [])
-    
+    };
+
     return (
         <>
-            <SweetAlert2 {...swalProps}
-                onConfirm={swalProps.onConfirmHandle}
-            />
+            <SweetAlert2 {...swalProps} onConfirm={swalProps.onConfirmHandle} />
             <Container>
                 <Row>
                     <Col xs={8} md={3} className="mx-auto my-4 py-3">
