@@ -5,6 +5,9 @@ import SweetAlert2 from "react-sweetalert2";
 import { FiEye, FiEyeOff } from 'react-icons/fi';
 import axios from 'axios';
 
+
+//Sign in page sudah bagus namun belum dibuatkan fungsi Sign out 
+
 export function Signin() {
     const navigate = useNavigate();
     const [state, setState] = useState({
