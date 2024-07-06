@@ -3,39 +3,56 @@ import { Button, Col, Container, Form, FormGroup, Row } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import SweetAlert2 from "react-sweetalert2";
 import { FiEye, FiEyeOff } from 'react-icons/fi';
+import axios from 'axios';
 
 export function Signin() {
     const navigate = useNavigate();
     const [state, setState] = useState({
-        input: {}
+        email: '',
+        password: ''
     });
 
-    const [personalityTestDone, setPersonalityTestDone] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
     const [swalProps, setSwalProps] = useState({
         show: false,
-        onConfirmHandle: {}
+        title: '',
+        text: '',
+        icon: ''
     });
 
     const handleChange = (e) => {
         const { name, value } = e.target;
         setState((prevState) => ({
             ...prevState,
-            input: {
-                ...prevState.input,
-                [name]: value,
-            }
+            [name]: value,
         }));
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        localStorage.setItem('email', state.input.email);
         
-        if (personalityTestDone) {
-            navigate('/dashboard');
-        } else {
-            navigate('/personalitytest');
+        try {
+            const response = await axios.post('http://localhost:5000/api/login', {
+                email: state.email,
+                password: state.password
+            });
+
+            const { token, user } = response.data;
+            localStorage.setItem('token', token);
+            localStorage.setItem('email', state.email);
+
+            if (user.personality) {
+                navigate('/dashboard');
+            } else {
+                navigate('/personalitytest');
+            }
+        } catch (error) {
+            setSwalProps({
+                show: true,
+                title: 'Login Error',
+                text: error.response?.data?.msg || 'Something went wrong!',
+                icon: 'error'
+            });
         }
     };
 
@@ -44,16 +61,15 @@ export function Signin() {
     };
 
     useEffect(() => {
-        if (localStorage.getItem('email')) {
-            if (localStorage.getItem('personalityTestDone')) {
-                setPersonalityTestDone(true);
-            }
+        const email = localStorage.getItem('email');
+        if (email) {
+            // You can implement logic to check if the personality test is done by fetching user data from backend if necessary
         }
     }, []);
 
     return (
         <>
-            <SweetAlert2 {...swalProps} onConfirm={swalProps.onConfirmHandle} />
+            <SweetAlert2 {...swalProps} />
             <Container>
                 <Row>
                     <Col xs={8} md={3} className="mx-auto my-4 py-3">
