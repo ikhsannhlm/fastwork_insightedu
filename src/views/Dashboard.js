@@ -7,14 +7,31 @@ const Dashboard = () => {
     const [username, setUsername] = useState('');
     const [personality, setPersonality] = useState('');
 
+    // Fungsi untuk mengembalikan teks berdasarkan nilai personality
+    const getPersonalityText = (personalityNumber) => {
+        switch (parseInt(personalityNumber)) {
+            case 0:
+            case 1:
+                return 'EST';
+            case 2:
+                return 'AGR';
+            case 3:
+                return 'CSN';
+            case 4:
+                return 'OPN';
+            default:
+                return '';
+        }
+    };
+
     useEffect(() => {
         const storedUsername = localStorage.getItem('username');
         const storedPersonality = localStorage.getItem('personality'); // Ambil nilai personality dari localStorage
         if (storedUsername) {
             setUsername(storedUsername);
         }
-        if (storedPersonality) {
-            setPersonality(storedPersonality); // Set nilai personality ke state jika ada
+        if (storedPersonality !== null) {
+            setPersonality(getPersonalityText(storedPersonality)); // Set nilai personality ke state jika ada
         }
     }, []);
 
