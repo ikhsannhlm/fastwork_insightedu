@@ -7,7 +7,7 @@ import { Signin } from './views/Signin';
 import Signup from './views/Signup';
 import { PersonalityTest } from './views/PersonalityTest';
 import { Result } from './views/Result';
-import { Dashboard } from './views/Dashboard';
+import Dashboard from './views/Dashboard'; // Import Dashboard component
 
 function App() {
   return (

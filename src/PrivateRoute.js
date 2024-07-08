@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
 
-const PrivateRoute = ({ component: Component, authenticated, ...rest }) => {
+const PrivateRoute = ({ component: Component, ...rest }) => {
     const [isAuthenticated, setIsAuthenticated] = useState(null);
 
     useEffect(() => {
-        const email = localStorage.getItem("email");
-        setIsAuthenticated(!!email);
+        const token = localStorage.getItem("token");
+        setIsAuthenticated(!!token);
     }, []);
 
     if (isAuthenticated === null) {
