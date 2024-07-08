@@ -3,7 +3,7 @@ import { Button, Col, Container, Form, FormGroup, Row } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import SweetAlert2 from "react-sweetalert2";
 import { FiEye, FiEyeOff } from 'react-icons/fi';
-import axios from 'axios';
+import axios from 'axios'; // Import Axios here
 
 export function Signin() {
     const navigate = useNavigate();
@@ -36,12 +36,13 @@ export function Signin() {
                 email: state.email,
                 password: state.password
             });
-    
+
             const { token, user } = response.data;
             localStorage.setItem('token', token);
             localStorage.setItem('email', state.email);
             localStorage.setItem('username', user.username); // Simpan nama pengguna ke localStorage
-    
+            localStorage.setItem('personality', user.personality); // Simpan personality ke localStorage
+
             if (user.personality) {
                 navigate('/dashboard');
             } else {
@@ -56,7 +57,6 @@ export function Signin() {
             });
         }
     };
-    
 
     const togglePasswordVisibility = () => {
         setShowPassword(!showPassword);
