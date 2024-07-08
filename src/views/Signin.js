@@ -36,11 +36,12 @@ export function Signin() {
                 email: state.email,
                 password: state.password
             });
-
+    
             const { token, user } = response.data;
             localStorage.setItem('token', token);
             localStorage.setItem('email', state.email);
-
+            localStorage.setItem('username', user.username); // Simpan nama pengguna ke localStorage
+    
             if (user.personality) {
                 navigate('/dashboard');
             } else {
@@ -55,6 +56,7 @@ export function Signin() {
             });
         }
     };
+    
 
     const togglePasswordVisibility = () => {
         setShowPassword(!showPassword);
