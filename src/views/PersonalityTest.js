@@ -137,10 +137,20 @@ export function PersonalityTest() {
                     console.log('Response from prediction API:', response.data); // Tampilkan respons API ke konsol
     
                     // Ambil nilai prediksi dari respons API
-                    const prediction = response.data.predictions[0];
+                    const predictionValue = response.data.predictions[0];
     
-                    // Simpan nilai prediksi ke local storage
-                    localStorage.setItem("personalityPrediction", prediction.toString());
+                    // Mapping nilai prediksi ke string personality
+                    const personalityMapping = {
+                        0: "extroversion",
+                        1: "neurotic",
+                        2: "agreeable",
+                        3: "conscientious",
+                        4: "openness"
+                    };
+                    const personality = personalityMapping[predictionValue];
+    
+                    // Simpan nilai personality ke local storage
+                    localStorage.setItem("personalityPrediction", personality);
     
                     // Simpan hasil tes kepribadian dan navigasi ke halaman hasil
                     localStorage.setItem("personalityTestDone", "true");
@@ -163,6 +173,7 @@ export function PersonalityTest() {
             }
         }
     };
+    
     
     
         
