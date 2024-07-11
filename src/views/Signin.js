@@ -39,6 +39,7 @@ export function Signin() {
 
             const { token, user } = response.data;
             localStorage.setItem('token', token);
+            localStorage.setItem('userId', user._id); // Simpan userId ke localStorage
             localStorage.setItem('email', state.email);
             localStorage.setItem('username', user.username); // Simpan nama pengguna ke localStorage
             localStorage.setItem('personality', user.personality); // Simpan personality ke localStorage

@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Button, Col, Form, Row } from "react-bootstrap";
-import SweetAlert2 from "react-sweetalert2";
 import { useNavigate } from "react-router-dom";
-import axios from 'axios'; // Import Axios here
+import SweetAlert2 from "react-sweetalert2";
+import { Navbar } from "./Navbar";
 
 export function PersonalityTest() {
     const [swalProps, setSwalProps] = useState({
@@ -10,6 +10,7 @@ export function PersonalityTest() {
         onConfirmHandle: {}
     });
 
+    // Define questions for each Big Five personality trait
     const questions = {
         EXT: [
             "Saya adalah pusat perhatian di pesta",
@@ -79,8 +80,10 @@ export function PersonalityTest() {
     const [onLoading, setOnLoading] = useState(false);
     const navigate = useNavigate();
 
+    // Calculate the total number of questions
     const totalQuestions = Object.values(questions).reduce((total, traitQuestions) => total + traitQuestions.length, 0);
 
+    // Calculate the current question number across all traits
     const calculateCurrentQuestionNumber = () => {
         const traits = Object.keys(questions);
         const currentTraitIndex = traits.indexOf(currentTrait);
@@ -102,8 +105,10 @@ export function PersonalityTest() {
         }
     };
 
-    const handleNext = async () => {
+    const handleNext = () => {
+        // Pastikan pengguna telah memilih jawaban untuk pertanyaan saat ini
         if (!answers[`${currentTrait}${idxQ + 1}`]) {
+            // Tampilkan pesan atau alert bahwa pengguna harus memilih jawaban
             setSwalProps({
                 show: true,
                 title: "Perhatian!",
@@ -115,6 +120,7 @@ export function PersonalityTest() {
             return;
         }
     
+        // Lanjutkan ke pertanyaan atau halaman berikutnya
         if (idxQ < questions[currentTrait].length - 1) {
             setIdxQ(idxQ + 1);
         } else {
@@ -124,51 +130,24 @@ export function PersonalityTest() {
                 setCurrentTrait(traits[currentTraitIndex + 1]);
                 setIdxQ(0);
             } else {
+                // Handle submission logic here
                 setOnLoading(true);
     
-                try {
-                    // Mengubah format data jawaban menjadi array 1 dimensi
-                    const answerData = Object.values(answers).map(answer => parseInt(answer));
+                // Simpan jawaban dan ubah status personalityTestDone di localStorage
+                localStorage.setItem("personalityTestDone", "true");
+                localStorage.setItem("personalityTestResults", JSON.stringify(answers));
     
-                    const response = await axios.post('http://localhost:5001/predict', {
-                        data: [answerData]
-                    });
-    
-                    console.log('Response from prediction API:', response.data); // Tampilkan respons API ke konsol
-    
-                    // Ambil nilai prediksi dari respons API
-                    const prediction = response.data.predictions[0];
-    
-                    // Simpan nilai prediksi ke local storage
-                    localStorage.setItem("personalityPrediction", prediction.toString());
-    
-                    // Simpan hasil tes kepribadian dan navigasi ke halaman hasil
-                    localStorage.setItem("personalityTestDone", "true");
-                    localStorage.setItem("personalityTestResults", JSON.stringify(response.data));
-    
-                    // Navigasi ke halaman hasil
-                    navigate("/result");
-                } catch (error) {
-                    setSwalProps({
-                        show: true,
-                        title: 'Error',
-                        text: 'Failed to save personality data. Please try again later.',
-                        icon: 'error',
-                        onConfirmHandle: () => {
-                            setSwalProps({ show: false });
-                        }
-                    });
-                    setOnLoading(false);
-                }
+                setTimeout(() => {
+                    navigate("/result"); // Navigasi ke halaman hasil
+                }, 3000);
             }
         }
     };
     
-    
-        
 
     const handleChange = (e) => {
         const answer = e.target.value;
+        // Mapping jawaban ke nilai numerik
         const answerValue = {
             "Sangat Tidak Setuju": 1,
             "Tidak Setuju": 2,
@@ -187,43 +166,26 @@ export function PersonalityTest() {
         setOnLoading(false);
     }, []);
 
-    // const sendPersonalityDataToBackend = async (personalityData) => {
-    //     const userId = localStorage.getItem('userId');
-    //     try {
-    //         await axios.post('http://localhost:5000/api/updateUserPersonality', {
-    //             userId: userId,
-    //             personality: personalityData
-    //         });
-    //         setTimeout(() => {
-    //             navigate("/result");
-    //         }, 3000);
-    //     } catch (error) {
-    //         setSwalProps({
-    //             show: true,
-    //             title: 'Error',
-    //             text: 'Failed to save personality data. Please try again later.',
-    //             icon: 'error',
-    //             onConfirmHandle: () => {
-    //                 setSwalProps({ show: false });
-    //             }
-    //         });
-    //         setOnLoading(false);
-    //     }
-    // };
-
     return (
         <>
             <SweetAlert2 {...swalProps} onConfirm={swalProps.onConfirmHandle} />
+            <Navbar />
 
             <div className="container my-4">
                 <Row>
                     <Col lg="8" className="mx-auto">
                         <div className="bg-body-tertiary p-5 rounded mt-5">
                             {onLoading ? (
-                                <h3>Terima kasih telah mengisi kuisioner, jawaban anda sedang diproses...</h3>
+                                <>
+                                    <h3>
+                                        Terima kasih telah mengisi kuisioner, jawaban anda sedang diproses...
+                                    </h3>
+                                </>
                             ) : (
                                 <>
-                                    <p className="fw-bolder">Jawab Pertanyaan Berikut ({calculateCurrentQuestionNumber()}/{totalQuestions})</p>
+                                    <p className="fw-bolder">
+                                        Jawab Pertanyaan Berikut ({calculateCurrentQuestionNumber()}/{totalQuestions})
+                                    </p>
                                     <div className="my-4">
                                         <p className="h4 my-3">{questions[currentTrait][idxQ]}</p>
                                         <Form>
@@ -296,15 +258,26 @@ export function PersonalityTest() {
                                             </div>
                                         </Form>
                                     </div>
-
-                                    <div className="d-flex justify-content-between">
-                                        <Button variant="primary" onClick={handlePrev} disabled={onLoading}>
-                                            Previous
-                                        </Button>
-                                        <Button variant="primary" onClick={handleNext} disabled={onLoading}>
-                                            {calculateCurrentQuestionNumber() === totalQuestions ? 'Submit' : 'Next'}
-                                        </Button>
-                                    </div>
+                                    <Row>
+                                        <Col lg="8">
+                                            <div className="d-grid">
+                                                <div className="btn-group justify-item-between">
+                                                    <Button variant="outline-danger" onClick={handlePrev}>
+                                                        &lt;&lt; Prev
+                                                    </Button>
+                                                    {idxQ === questions[currentTrait].length - 1 ? (
+                                                        <Button variant="primary" onClick={handleNext}>
+                                                            {currentTrait === "OPN" ? "Submit" : "Next >>"}
+                                                        </Button>
+                                                    ) : (
+                                                        <Button className="bg-purple text-light" onClick={handleNext}>
+                                                            Next
+                                                        </Button>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        </Col>
+                                    </Row>
                                 </>
                             )}
                         </div>
@@ -314,5 +287,3 @@ export function PersonalityTest() {
         </>
     );
 }
-
-export default PersonalityTest;
