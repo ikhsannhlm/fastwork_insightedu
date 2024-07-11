@@ -6,24 +6,25 @@ export function Result() {
     const location = useLocation();
     const navigate = useNavigate();
     const { state } = location;
-    const results = JSON.parse(localStorage.getItem("personalityTestResults"));
     const personality = localStorage.getItem("personalityPrediction");
+    const userId = localStorage.getItem("userId"); // Menambahkan pengambilan userId dari localStorage
 
     useEffect(() => {
         const updatePersonalityInDB = async () => {
-            const userId = localStorage.getItem('userId');
             try {
-                await axios.post('http://localhost:5000/api/updateUserPersonality', {
-                    userId: userId,
+                await axios.put(`http://localhost:5000/api/users/updateUserPersonality/${userId}`, {
                     personality: personality
                 });
+                console.log("Personality updated successfully");
             } catch (error) {
                 console.error("Failed to update personality in the database", error);
             }
         };
 
-        updatePersonalityInDB();
-    }, [personality]);
+        if (userId && personality) { // Menambahkan pengecekan untuk userId dan personality sebelum melakukan update
+            updatePersonalityInDB();
+        }
+    }, [userId, personality]);
 
     return (
         <>
