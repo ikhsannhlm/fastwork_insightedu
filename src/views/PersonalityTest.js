@@ -141,11 +141,11 @@ export function PersonalityTest() {
     
                     // Mapping nilai prediksi ke string personality
                     const personalityMapping = {
-                        0: "extroversion",
-                        1: "neurotic",
-                        2: "agreeable",
-                        3: "conscientious",
-                        4: "openness"
+                        0: "EXTROVERSION",
+                        1: "NEUROTIC",
+                        2: "AGREEABLE",
+                        3: "CONSCIENTIOUS",
+                        4: "OPENNESS"
                     };
                     const personality = personalityMapping[predictionValue];
     
