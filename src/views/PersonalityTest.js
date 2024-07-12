@@ -2,7 +2,71 @@ import React, { useEffect, useState } from "react";
 import { Button, Col, Form, Row } from "react-bootstrap";
 import SweetAlert2 from "react-sweetalert2";
 import { useNavigate } from "react-router-dom";
-import axios from 'axios'; // Import Axios here
+import axios from 'axios';
+
+// Definisikan questions di luar dari fungsi PersonalityTest
+const questions = {
+    EXT: [
+        "Saya adalah pusat perhatian di pesta",
+        "Saya tidak banyak bicara",
+        "Saya merasa nyaman di sekitar orang lain",
+        "Saya tetap berada di latar belakang",
+        "Saya memulai percakapan",
+        "Saya tidak banyak berbicara",
+        "Saya berbicara dengan banyak orang berbeda di pesta",
+        "Saya tidak suka menarik perhatian",
+        "Saya tidak keberatan menjadi pusat perhatian",
+        "Saya pendiam di sekitar orang asing"
+    ],
+    EST: [
+        "Saya mudah stres",
+        "Saya santai sebagian besar waktu",
+        "Saya sering khawatir tentang banyak hal",
+        "Saya jarang merasa sedih",
+        "Saya mudah terganggu",
+        "Saya mudah marah",
+        "Saya sering berubah suasana hati",
+        "Saya sering mengalami perubahan suasana hati yang sering",
+        "Saya mudah tersinggung",
+        "Saya sering merasa sedih"
+    ],
+    AGR: [
+        "Saya sedikit peduli terhadap orang lain",
+        "Saya tertarik pada orang lain",
+        "Saya suka menghina orang lain",
+        "Saya bersimpati dengan perasaan orang lain",
+        "Saya tidak tertarik pada masalah orang lain",
+        "Saya memiliki hati yang lembut",
+        "Saya tidak benar-benar tertarik pada orang lain",
+        "Saya meluangkan waktu untuk orang lain",
+        "Saya merasakan emosi orang lain",
+        "Saya membuat orang merasa nyaman"
+    ],
+    CSN: [
+        "Saya selalu siap",
+        "Saya meninggalkan barang-barang saya berserakan",
+        "Saya memperhatikan detail",
+        "Saya membuat kekacauan",
+        "Saya segera menyelesaikan pekerjaan rumah tangga",
+        "Saya sering lupa menaruh kembali barang-barang pada tempatnya",
+        "Saya suka ketertiban",
+        "Saya mengabaikan tugas saya",
+        "Saya mengikuti jadwal",
+        "Saya teliti dalam pekerjaan saya"
+    ],
+    OPN: [
+        "Saya memiliki kosakata yang kaya",
+        "Saya kesulitan memahami ide-ide abstrak",
+        "Saya memiliki imajinasi yang hidup",
+        "Saya tidak tertarik pada ide-ide abstrak",
+        "Saya memiliki ide-ide yang luar biasa",
+        "Saya tidak memiliki imajinasi yang baik",
+        "Saya cepat memahami banyak hal",
+        "Saya menggunakan kata-kata yang sulit",
+        "Saya meluangkan waktu untuk merenungkan sesuatu",
+        "Saya penuh dengan ide"
+    ]
+};
 
 export function PersonalityTest() {
     const [swalProps, setSwalProps] = useState({
@@ -10,73 +74,11 @@ export function PersonalityTest() {
         onConfirmHandle: {}
     });
 
-    const questions = {
-        EXT: [
-            "Saya adalah pusat perhatian di pesta",
-            "Saya tidak banyak bicara",
-            "Saya merasa nyaman di sekitar orang lain",
-            "Saya tetap berada di latar belakang",
-            "Saya memulai percakapan",
-            "Saya tidak banyak berbicara",
-            "Saya berbicara dengan banyak orang berbeda di pesta",
-            "Saya tidak suka menarik perhatian",
-            "Saya tidak keberatan menjadi pusat perhatian",
-            "Saya pendiam di sekitar orang asing"
-        ],
-        EST: [
-            "Saya mudah stres",
-            "Saya santai sebagian besar waktu",
-            "Saya sering khawatir tentang banyak hal",
-            "Saya jarang merasa sedih",
-            "Saya mudah terganggu",
-            "Saya mudah marah",
-            "Saya sering berubah suasana hati",
-            "Saya sering mengalami perubahan suasana hati yang sering",
-            "Saya mudah tersinggung",
-            "Saya sering merasa sedih"
-        ],
-        AGR: [
-            "Saya sedikit peduli terhadap orang lain",
-            "Saya tertarik pada orang lain",
-            "Saya suka menghina orang lain",
-            "Saya bersimpati dengan perasaan orang lain",
-            "Saya tidak tertarik pada masalah orang lain",
-            "Saya memiliki hati yang lembut",
-            "Saya tidak benar-benar tertarik pada orang lain",
-            "Saya meluangkan waktu untuk orang lain",
-            "Saya merasakan emosi orang lain",
-            "Saya membuat orang merasa nyaman"
-        ],
-        CSN: [
-            "Saya selalu siap",
-            "Saya meninggalkan barang-barang saya berserakan",
-            "Saya memperhatikan detail",
-            "Saya membuat kekacauan",
-            "Saya segera menyelesaikan pekerjaan rumah tangga",
-            "Saya sering lupa menaruh kembali barang-barang pada tempatnya",
-            "Saya suka ketertiban",
-            "Saya mengabaikan tugas saya",
-            "Saya mengikuti jadwal",
-            "Saya teliti dalam pekerjaan saya"
-        ],
-        OPN: [
-            "Saya memiliki kosakata yang kaya",
-            "Saya kesulitan memahami ide-ide abstrak",
-            "Saya memiliki imajinasi yang hidup",
-            "Saya tidak tertarik pada ide-ide abstrak",
-            "Saya memiliki ide-ide yang luar biasa",
-            "Saya tidak memiliki imajinasi yang baik",
-            "Saya cepat memahami banyak hal",
-            "Saya menggunakan kata-kata yang sulit",
-            "Saya meluangkan waktu untuk merenungkan sesuatu",
-            "Saya penuh dengan ide"
-        ]
-    };
-
     const [answers, setAnswers] = useState({});
     const [currentTrait, setCurrentTrait] = useState("EXT");
     const [idxQ, setIdxQ] = useState(0);
     const [onLoading, setOnLoading] = useState(false);
+    const [showWelcome, setShowWelcome] = useState(true); // State untuk mengatur tampilan pesan sambutan
     const navigate = useNavigate();
 
     const totalQuestions = Object.values(questions).reduce((total, traitQuestions) => total + traitQuestions.length, 0);
@@ -173,10 +175,6 @@ export function PersonalityTest() {
             }
         }
     };
-    
-    
-    
-        
 
     const handleChange = (e) => {
         const answer = e.target.value;
@@ -198,29 +196,9 @@ export function PersonalityTest() {
         setOnLoading(false);
     }, []);
 
-    // const sendPersonalityDataToBackend = async (personalityData) => {
-    //     const userId = localStorage.getItem('userId');
-    //     try {
-    //         await axios.post('http://localhost:5000/api/updateUserPersonality', {
-    //             userId: userId,
-    //             personality: personalityData
-    //         });
-    //         setTimeout(() => {
-    //             navigate("/result");
-    //         }, 3000);
-    //     } catch (error) {
-    //         setSwalProps({
-    //             show: true,
-    //             title: 'Error',
-    //             text: 'Failed to save personality data. Please try again later.',
-    //             icon: 'error',
-    //             onConfirmHandle: () => {
-    //                 setSwalProps({ show: false });
-    //             }
-    //         });
-    //         setOnLoading(false);
-    //     }
-    // };
+    const handleContinue = () => {
+        setShowWelcome(false);
+    };
 
     return (
         <>
@@ -230,7 +208,15 @@ export function PersonalityTest() {
                 <Row>
                     <Col lg="8" className="mx-auto">
                         <div className="bg-body-tertiary p-5 rounded mt-5">
-                            {onLoading ? (
+                            {showWelcome ? (
+                                <>
+                                    <h3>Selamat Datang di insight Edu</h3>
+                                    <p>Ayo ketahui kepribadianmu dengan menjawab Pertanyaan - Pertanyaan berikut :</p>
+                                    <Button variant="primary" onClick={handleContinue}>
+                                        Lanjutkan
+                                    </Button>
+                                </>
+                            ) : onLoading ? (
                                 <h3>Terima kasih telah mengisi kuisioner, jawaban anda sedang diproses...</h3>
                             ) : (
                                 <>

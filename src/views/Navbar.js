@@ -21,6 +21,11 @@ export function Navbar() {
         navigate('/signin');
     };
 
+    const handleTestAgain = () => {
+        localStorage.removeItem('personality');
+        navigate('/personalitytest');
+    };
+
     return (
         <>
             <nav className="navbar navbar-dark navbar-expand-lg bg-purple">
@@ -41,7 +46,7 @@ export function Navbar() {
                     <div className="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul className="navbar-nav ms-auto me-0 mb-2 mb-lg-0">
                             <li className="nav-item">
-                                <span className="nav-link active" aria-current="page">Test again</span>
+                                <button className="btn btn-link nav-link" onClick={handleTestAgain}>Test again</button>
                             </li>
                             <li className="nav-item">
                                 <button className="btn btn-dark nav-link" onClick={handleSignOut}>Logout</button>
