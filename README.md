@@ -81,6 +81,11 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/a
 
 ### Deployment
 
+### Proposal 
+You can check out our proposal [Proposal InsightEdu] (https://drive.google.com/drive/folders/10MV9z9NrwrF8Yy5goy_o0TAJPa5CbmF6)
+
+### Vidio Demo 
+
 This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
 
 ### `npm run build` fails to minify
