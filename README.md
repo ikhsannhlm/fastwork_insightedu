@@ -20,7 +20,7 @@ field.
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 # Proposal 
-You can check out our proposal [Proposal InsightEdu]([https://drive.google.com/drive/folders/10MV9z9NrwrF8Yy5goy_o0TAJPa5CbmF6)])
+You can check out our proposal [Proposal InsightEdu](https://drive.google.com/drive/folders/10MV9z9NrwrF8Yy5goy_o0TAJPa5CbmF6)
 
 # Video Demo
 
