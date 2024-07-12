@@ -1,4 +1,4 @@
-#Our Team 
+# Team 
 1. 1217050043 Diviandini Azzarhra (Praktikum ML A)
 2. 1217050046 Euis Nurhanifah (Praktikum ML A)
 3. 1217050097 Muhammad Ikhsan Nurhalim (Praktikum B, Teori D)
