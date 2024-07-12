@@ -1,3 +1,21 @@
+# Team 
+1. 1217050043 Diviandini Azzarhra (Praktikum ML A)
+2. 1217050046 Euis Nurhanifah (Praktikum ML A)
+3. 1217050097 Muhammad Ikhsan Nurhalim (Praktikum B, Teori D)
+  
+# Description 
+This project develops a web
+application that recommends
+educational and career paths in
+technology tailored to users'
+personalities. By combining
+psychological insights with machine
+learning, the app ensures that each
+user’s learning journey aligns with their
+unique strengths and preferences,
+enhancing their success in the tech
+field.
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
