@@ -150,7 +150,7 @@ export function PersonalityTest() {
                     const personality = personalityMapping[predictionValue];
     
                     // Simpan nilai personality ke local storage
-                    localStorage.setItem("personalityPrediction", personality);
+                    localStorage.setItem("personality", personality);
     
                     // Simpan hasil tes kepribadian dan navigasi ke halaman hasil
                     localStorage.setItem("personalityTestDone", "true");

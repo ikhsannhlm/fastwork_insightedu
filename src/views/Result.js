@@ -6,7 +6,7 @@ export function Result() {
     const location = useLocation();
     const navigate = useNavigate();
     const { state } = location;
-    const personality = localStorage.getItem("personalityPrediction");
+    const personality = localStorage.getItem("personality");
     const userId = localStorage.getItem("userId"); // Menambahkan pengambilan userId dari localStorage
 
     useEffect(() => {

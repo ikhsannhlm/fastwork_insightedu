@@ -3,43 +3,48 @@ import { useNavigate } from "react-router-dom";
 
 export function Navbar() {
     const navigate = useNavigate();
-    const [userName, setUserName] = useState("");
+    const [username, setUsername] = useState("");
 
     useEffect(() => {
-        // Ambil nama pengguna dari localStorage saat komponen Navbar dirender
-        const storedUserName = localStorage.getItem("userName");
-        if (storedUserName) {
-            setUserName(storedUserName);
+        const username = localStorage.getItem("username");
+        if (username) {
+            setUsername(username);
         }
     }, []);
 
-    const handleLogout = () => {
-        localStorage.clear();
-        navigate('/');
+    const handleSignOut = () => {
+        localStorage.removeItem('token');
+        localStorage.removeItem('email');
+        localStorage.removeItem('username');
+        localStorage.removeItem('personality');
+        localStorage.removeItem('userId');
+        navigate('/signin');
     };
 
     return (
         <>
             <nav className="navbar navbar-dark navbar-expand-lg bg-purple">
                 <div className="container">
-                    <a className="navbar-brand" href="/">
-                        <img className="d-block mx-auto mb-1" src="/images/Insight_Enterprises_Logo.png" alt="" width="100" />
-                    </a>
+                    <span className="navbar-brand">
+                        <img className="d-block mx-auto mb-1" src="/images/Insight_Enterprises_Logo2.png" alt="" width="100" />
+                    </span>
+                    <ul className="navbar-nav ms-auto me-0 mb-2 mb-lg-0">
+                        {username ? (
+                            <li className="nav-item">
+                                <span className="nav-link active">Welcome, {username}</span>
+                            </li>
+                        ) : null}
+                    </ul>
                     <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                         <span className="navbar-toggler-icon"></span>
                     </button>
                     <div className="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul className="navbar-nav ms-auto me-0 mb-2 mb-lg-0">
                             <li className="nav-item">
-                                <a className="nav-link active" aria-current="page" href="/">Home</a>
+                                <span className="nav-link active" aria-current="page">Test again</span>
                             </li>
-                            {userName ? (
-                                <li className="nav-item">
-                                    <span className="nav-link">Welcome, {userName}</span>
-                                </li>
-                            ) : null}
                             <li className="nav-item">
-                                <a className="nav-link" href="/" onClick={handleLogout}>Logout</a>
+                                <button className="btn btn-dark nav-link" onClick={handleSignOut}>Logout</button>
                             </li>
                         </ul>
                     </div>

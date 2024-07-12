@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Container, Row, Col } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
+import { Navbar } from './Navbar';
 
 const Dashboard = () => {
     const navigate = useNavigate();
@@ -10,41 +11,90 @@ const Dashboard = () => {
 
     useEffect(() => {
         const username = localStorage.getItem('username');
-        const personality = localStorage.getItem('personality'); // Ambil nilai personality dari localStorage
-        const userId = localStorage.getItem('userId'); // Ambil userId dari localStorage
+        const personality = localStorage.getItem('personality');
+        const userId = localStorage.getItem('userId');
 
         if (username) {
             setUsername(username);
         }
         if (personality !== null) {
-            setPersonality(personality); // Set nilai personality ke state jika ada
+            setPersonality(personality);
         }
         if (userId) {
-            setUserId(userId); // Set nilai userId ke state jika ada
+            setUserId(userId);
         }
     }, []);
 
-    const handleSignOut = () => {
-        localStorage.removeItem('token');
-        localStorage.removeItem('email');
-        localStorage.removeItem('username');
-        localStorage.removeItem('personality'); // Hapus personality dari localStorage saat sign out
-        localStorage.removeItem('userId'); // Hapus userId dari localStorage saat sign out
-        navigate('/signin');
+    const getRecommendedJobs = () => {
+        return [
+            {
+                jobTitle: "Pengembang Perangkat Lunak",
+                description: "Pekerjaan yang membutuhkan kreativitas dan pemecahan masalah."
+            },
+            {
+                jobTitle: "Desainer UX/UI",
+                description: "Pekerjaan yang melibatkan desain antarmuka pengguna dan pengalaman pengguna."
+            },
+            {
+                jobTitle: "Analis Data",
+                description: "Pekerjaan yang mengolah dan menganalisis data untuk membuat keputusan bisnis."
+            }
+        ];
+    };
+
+    const renderLearningRoadmap = (jobTitle) => {
+        if (jobTitle === "Pengembang Perangkat Lunak") {
+            return (
+                <div>
+                    <h4>Roadmap untuk Menjadi Pengembang Perangkat Lunak</h4>
+                    <ul>
+                        <li>Mempelajari bahasa pemrograman seperti JavaScript, Python, dll.</li>
+                        <li>Mengembangkan proyek sederhana untuk mempraktikkan keterampilan.</li>
+                        <li>Memahami konsep dasar pengembangan perangkat lunak dan algoritma.</li>
+                    </ul>
+                    <a href="/link-to-resources" className="btn btn-primary">Mulai Belajar</a>
+                </div>
+            );
+        }
     };
 
     return (
-        <Container>
-            <Row className="my-5">
-                <Col className="text-center">
-                    <h1>Welcome to your Dashboard</h1>
-                    <p>Welcome, {username || 'Guest'}!</p>
-                    {personality && <p>Your Personality: {personality}</p>} {/* Tampilkan nilai personality jika tersedia */}
-                    {userId && <p>Your User ID: {userId}</p>} {/* Tampilkan userId jika tersedia */}
-                    <Button variant="dark" onClick={handleSignOut}>Sign Out</Button>
-                </Col>
-            </Row>
-        </Container>
+        <>
+            <Navbar />
+            <Container>
+                <Row className="my-5">
+                    <Col className="text-center">
+                        <h1>Welcome to your Dashboard!</h1>
+                        {personality && <h3>Your Personality is {personality}</h3>}
+                    </Col>
+                </Row>
+                <Row className="my-4">
+                    <Col>
+                        <h3>Rekomendasi Pekerjaan Berdasarkan Kepribadianmu </h3>
+                        <div className="row">
+                            {getRecommendedJobs().map((job, index) => (
+                                <div className="col-lg-4 mb-4" key={index}>
+                                    <div className="card">
+                                        <div className="card-body">
+                                            <h5 className="card-title">{job.jobTitle}</h5>
+                                            <p className="card-text">{job.description}</p>
+                                            <button className="btn btn-primary">Pelajari lebih lanjut</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </Col>
+                </Row>
+                <Row>
+                    <Col>
+                        <hr />
+                        <h3>Roadmap untuk Pekerjaan</h3>
+                        {renderLearningRoadmap("Pengembang Perangkat Lunak")}
+                    </Col>
+                </Row>
+            </Container>
+        </>
     );
 };
 
